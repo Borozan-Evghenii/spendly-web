@@ -25,12 +25,23 @@ jobs:
         
       - name: Create deployment package
         run: |
-          mkdir deploy
-          cp -r .next deploy/
-          cp -r public deploy/ 2>/dev/null || :
-          cp package*.json deploy/
-          cp next.config.* deploy/ 2>/dev/null || :
-          cd deploy && zip -r ../${{ env.DEPLOY_PACKAGE_NAME }} .
+          echo "web: npm start" > Procfile 
+          
+          mkdir -p .ebextensions
+          cat > .ebextensions/nodecommand.config << 'EOF'
+          option_settings:
+            aws:elasticbeanstalk:container:nodejs:
+              NodeCommand: "npm start"
+          EOF
+          
+          zip -r ${{ env.DEPLOY_PACKAGE_NAME }} \
+            .next \
+            node_modules \
+            package*.json \
+            Procfile \
+            .ebextensions \
+            $(find . -name "next.config.*" 2>/dev/null) \
+            $([ -d "public" ] && echo "public" || echo "")
 
       - name: Configure AWS Credentials
         uses : aws-actions/configure-aws-credentials@v5.1.1
