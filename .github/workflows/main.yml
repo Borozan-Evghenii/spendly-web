@@ -2,13 +2,23 @@ on:
   push:
     branches:
     - main
-
+env: 
+  EB_PACKAGE_S3_BUCKET_NAME: "spendly-deploy-builds"
+  EB_APP_NAME              : "spendly"
+  EB_ENVIRONMENT_NAME      : "Spendly-env"
+  DEPLOY_PACKAGE_NAME      : "Spendly-package-${{ github.sha }}.zip"
+  AWS_REGION_NAME          : "us-east-1"
+  
+  
 jobs: 
-  Build_App: 
+  ci_process: 
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
         uses: actions/checkout@v4
+      
       - name: Build app 
         run : npm install
               npm run build
+      - name: Create ZIP deploy package 
+        run : zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.git*
