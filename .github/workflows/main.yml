@@ -26,7 +26,7 @@ jobs:
       - name: Create deployment package
         run: |
           echo "web: npm start" > Procfile
-          zip -r ${{ env.DEPLOY_PACKAGE_NAME }} .next node_modules package*.json Procfile public
+          zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.git*
 
       - name: Configure AWS Credentials
         uses : aws-actions/configure-aws-credentials@v5.1.1
