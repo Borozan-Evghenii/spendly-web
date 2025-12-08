@@ -12,6 +12,7 @@ env:
   
 jobs: 
   ci_process: 
+    environment: Actions Environment Variables
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
