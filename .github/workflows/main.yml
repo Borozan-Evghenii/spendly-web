@@ -16,10 +16,13 @@ jobs:
     steps:
       - name: Clone repo
         uses: actions/checkout@v4
+        
+      - name: Install dependencies
+        run: npm ci
       
       - name: Build app 
-        run : npm install
-              npm run build
+        run : npm run build
+        
       - name: Create deployment package
         run: |
           mkdir deploy
